@@ -36,13 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // Показываем индикатор загрузки
             showProgressWidget();
             
+            // Определяем тип работы - по умолчанию 'referat'
+            const workType = 'referat'; // Можно изменить в зависимости от контекста
+            
             // Отправляем запрос на сервер для генерации текста
             fetch('/api/generate.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ topic: topic })
+                body: JSON.stringify({ 
+                    topic: topic,
+                    type: workType
+                })
             })
             .then(response => response.json())
             .then(data => {

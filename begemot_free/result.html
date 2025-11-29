@@ -128,6 +128,10 @@
             // Получаем данные из localStorage или используем тестовые данные
             const resultData = JSON.parse(localStorage.getItem('generatedResult')) || {
                 title: 'Пример темы проекта',
+                introduction: 'Введение\n\nТема "Пример темы проекта" является актуальной в современных условиях. В данной работе будет рассмотрена суть данной проблемы, её значение и возможные пути решения.',
+                main_part: 'Основная часть\n\nДля более глубокого понимания темы "Пример темы проекта" необходимо рассмотреть следующие аспекты:\n\n1. Исторический аспект и развитие темы\n2. Современные тенденции и подходы\n3. Проблемы и перспективы развития\n4. Практические примеры и кейсы',
+                conclusion: 'Заключение\n\nВ ходе работы были рассмотрены ключевые аспекты темы "Пример темы проекта". Были проанализированы различные точки зрения и подходы к решению проблемы. Можно сделать вывод, что тема "Пример темы проекта" имеет важное значение и требует дальнейшего изучения и развития.',
+                references: 'Список литературы\n\n1. Автор, А.А. Название работы / А.А. Автор. – М.: Издательство, 2024. – 200 с.\n2. Автор, Б.Б. Другая работа / Б.Б. Автор. – СПб.: Издательство, 2024. – 150 с.\n3. Название ресурса [Электронный ресурс]. – Режим доступа: https://example.com (дата обращения: 30.11.2024).',
                 sections: [
                     {
                         title: 'Введение',
@@ -156,28 +160,56 @@
             const contentContainer = document.getElementById('resultContent');
             contentContainer.innerHTML = '';
             
-            resultData.sections.forEach(section => {
-                const sectionElement = document.createElement('div');
-                sectionElement.className = 'result-section';
+            // Если у нас есть отдельные поля (introduction, main_part, conclusion, references), используем их
+            if (resultData.introduction && resultData.main_part && resultData.conclusion && resultData.references) {
+                // Создаем структурированное содержимое из отдельных полей
+                const sections = [
+                    { title: 'Введение', content: resultData.introduction },
+                    { title: 'Основная часть', content: resultData.main_part },
+                    { title: 'Заключение', content: resultData.conclusion },
+                    { title: 'Список литературы', content: resultData.references }
+                ];
                 
-                const titleElement = document.createElement('h2');
-                titleElement.className = 'result-section-title';
-                titleElement.textContent = section.title;
-                
-                const contentElement = document.createElement('div');
-                contentElement.innerHTML = section.content.replace(/\n/g, '<br>');
-                
-                sectionElement.appendChild(titleElement);
-                sectionElement.appendChild(contentElement);
-                contentContainer.appendChild(sectionElement);
-            });
-            
+                sections.forEach(section => {
+                    const sectionElement = document.createElement('div');
+                    sectionElement.className = 'result-section';
+                    
+                    const titleElement = document.createElement('h2');
+                    titleElement.className = 'result-section-title';
+                    titleElement.textContent = section.title;
+                    
+                    const contentElement = document.createElement('div');
+                    contentElement.innerHTML = section.content.replace(/\n/g, '<br>');
+                    
+                    sectionElement.appendChild(titleElement);
+                    sectionElement.appendChild(contentElement);
+                    contentContainer.appendChild(sectionElement);
+                });
+            } else if (resultData.sections) {
+                // Используем структуру sections если отдельные поля отсутствуют
+                resultData.sections.forEach(section => {
+                    const sectionElement = document.createElement('div');
+                    sectionElement.className = 'result-section';
+                    
+                    const titleElement = document.createElement('h2');
+                    titleElement.className = 'result-section-title';
+                    titleElement.textContent = section.title;
+                    
+                    const contentElement = document.createElement('div');
+                    contentElement.innerHTML = section.content.replace(/\n/g, '<br>');
+                    
+                    sectionElement.appendChild(titleElement);
+                    sectionElement.appendChild(contentElement);
+                    contentContainer.appendChild(sectionElement);
+                });
+            }
+
             // Обработчики для кнопок экспорта
             document.getElementById('exportWord').addEventListener('click', function(e) {
                 e.preventDefault();
                 alert('Функция экспорта в Word будет реализована в следующей версии');
             });
-            
+
             document.getElementById('exportPdf').addEventListener('click', function(e) {
                 e.preventDefault();
                 alert('Функция экспорта в PDF будет реализована в следующей версии');
