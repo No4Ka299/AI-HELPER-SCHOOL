@@ -3,91 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI HELPER SCHOOL - Создание academic работ по ГОСТу</title>
+    <title>AI HELPER SCHOOL - Создание работ по ГОСТ</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <div class="container">
             <h1>AI HELPER SCHOOL</h1>
-            <p>Профессиональное создание academic работ по ГОСТу</p>
+            <p>Создание курсовых, сочинений и докладов по ГОСТу</p>
         </div>
     </header>
 
     <main>
-        <section class="hero">
-            <div class="container">
-                <h2>Создаем качественные academic работы</h2>
-                <p>Наш ИИ генерирует курсовые работы, сочинения и доклады строго по ГОСТу с использованием информации из научных источников</p>
-            </div>
-        </section>
+        <div class="container">
+            <div class="form-section">
+                <h2>Создать новую работу</h2>
+                <form id="workForm">
+                    <div class="input-group">
+                        <label for="topic">Тема работы:</label>
+                        <input type="text" id="topic" name="topic" required placeholder="Введите тему работы">
+                    </div>
 
-        <section class="services">
-            <div class="container">
-                <h2>Наши услуги</h2>
-                <div class="service-cards">
-                    <div class="service-card">
-                        <h3>Курсовая работа</h3>
-                        <p>25+ страниц</p>
-                        <p>По ГОСТу</p>
-                        <p>С научной базой</p>
-                    </div>
-                    <div class="service-card">
-                        <h3>Сочинение</h3>
-                        <p>300+ строк</p>
-                        <p>Логичная структура</p>
-                        <p>Аргументированные мысли</p>
-                    </div>
-                    <div class="service-card">
-                        <h3>Доклад</h3>
-                        <p>2+ страницы</p>
-                        <p>Теоретическая база</p>
-                        <p>Примеры и выводы</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="order">
-            <div class="container">
-                <h2>Закажите свою работу</h2>
-                <form id="orderForm">
-                    <div class="form-group">
-                        <label for="workType">Тип работы:</label>
-                        <select id="workType" required>
+                    <div class="input-group">
+                        <label for="type">Тип работы:</label>
+                        <select id="type" name="type" required>
                             <option value="">Выберите тип работы</option>
                             <option value="coursework">Курсовая работа (25+ страниц)</option>
                             <option value="essay">Сочинение (300+ строк)</option>
                             <option value="report">Доклад (2+ страницы)</option>
                         </select>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="topic">Тема работы:</label>
-                        <input type="text" id="topic" placeholder="Введите тему работы" required>
-                    </div>
-                    
-                    <div class="form-group">
+
+                    <div class="input-group">
                         <label for="subject">Предмет:</label>
-                        <input type="text" id="subject" placeholder="Укажите предмет" required>
+                        <select id="subject" name="subject" required>
+                            <option value="">Выберите предмет</option>
+                            <option value="informatics">Информатика</option>
+                            <option value="literature">Литература</option>
+                            <option value="history">История</option>
+                            <option value="philosophy">Философия</option>
+                            <option value="economics">Экономика</option>
+                            <option value="law">Право</option>
+                            <option value="psychology">Психология</option>
+                            <option value="sociology">Социология</option>
+                            <option value="pedagogy">Педагогика</option>
+                            <option value="other">Другое</option>
+                        </select>
                     </div>
-                    
-                    <div class="form-group">
+
+                    <div class="input-group">
+                        <label for="pages">Количество страниц (если применимо):</label>
+                        <input type="number" id="pages" name="pages" min="1" value="1">
+                    </div>
+
+                    <div class="input-group">
                         <label for="requirements">Дополнительные требования:</label>
-                        <textarea id="requirements" placeholder="Особые требования к работе"></textarea>
+                        <textarea id="requirements" name="requirements" placeholder="Укажите дополнительные требования к работе"></textarea>
                     </div>
-                    
-                    <button type="submit">Создать работу</button>
+
+                    <button type="submit" id="generateBtn">Создать работу</button>
                 </form>
-                
-                <div id="result" class="result"></div>
             </div>
-        </section>
+
+            <div class="output-section">
+                <h2>Результат</h2>
+                <div id="loading" class="loading hidden">
+                    <p>Генерация работы...</p>
+                    <div class="spinner"></div>
+                </div>
+                <div id="result" class="result hidden">
+                    <h3>Ваша работа готова!</h3>
+                    <p id="workInfo"></p>
+                    <button id="downloadBtn" class="download-btn">Скачать документ</button>
+                </div>
+                <div id="error" class="error hidden">
+                    <p>Произошла ошибка при генерации работы. Пожалуйста, попробуйте еще раз.</p>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 AI HELPER SCHOOL. Все права защищены.</p>
+            <p>AI HELPER SCHOOL - Бесплатный генератор учебных работ по ГОСТу</p>
         </div>
     </footer>
 

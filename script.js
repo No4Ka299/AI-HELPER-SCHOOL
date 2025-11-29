@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const orderForm = document.getElementById('orderForm');
+    const workForm = document.getElementById('workForm');
+    const loadingDiv = document.getElementById('loading');
     const resultDiv = document.getElementById('result');
+    const errorDiv = document.getElementById('error');
+    const downloadBtn = document.getElementById('downloadBtn');
     
     // Sample data from academic sources for demonstration
     const academicSources = {
@@ -62,104 +65,261 @@ document.addEventListener('DOMContentLoaded', function() {
         return array[Math.floor(Math.random() * array.length)];
     }
 
-    // Function to generate coursework (25+ pages)
-    function generateCoursework(topic, subject, requirements) {
-        let content = `# Курсовая работа: ${topic}\n\n`;
-        
-        content += "## Введение\n";
-        content += getRandomElement(academicSources.introTexts) + "\n\n";
-        
-        content += "## Глава 1. Теоретические аспекты проблемы\n";
-        content += academicSources.bodyTexts.map(text => text).join(' ') + "\n\n";
-        
-        content += "### 1.1. Исторический аспект\n";
-        content += getRandomElement(academicSources.bodyTexts) + "\n\n";
-        
-        content += "### 1.2. Современные подходы\n";
-        content += getRandomElement(academicSources.bodyTexts) + "\n\n";
-        
-        content += "## Глава 2. Практическая часть\n";
-        content += "Для решения поставленных задач были использованы следующие методы: анализ научной литературы, сравнительный метод, метод экспертной оценки.\n\n";
-        
-        content += "### 2.1. Методология исследования\n";
-        content += getRandomElement(academicSources.bodyTexts) + "\n\n";
-        
-        content += "### 2.2. Результаты и их анализ\n";
-        content += getRandomElement(academicSources.bodyTexts) + "\n\n";
-        
-        content += "## Глава 3. Практические рекомендации\n";
-        content += "На основе проведенного анализа были разработаны следующие рекомендации...\n\n";
-        
-        content += "## Заключение\n";
-        content += getRandomElement(academicSources.conclusionTexts) + "\n\n";
-        
-        content += "## Список использованной литературы\n";
-        content += academicSources.topics.slice(0, 8).map((source, i) => `${i+1}. ${source} // Автор. - Место: Издательство, ${2020+i}. - 200 с.`).join('\n') + "\n\n";
-        
-        // Add more content to reach 25+ pages
-        for (let i = 0; i < 20; i++) {
-            content += `## Приложение ${i+1}\n`;
-            content += getRandomElement(academicSources.bodyTexts) + "\n\n";
+    // Function to generate coursework (25+ pages) with proper GOST formatting
+    function generateCoursework(topic, subject, requirements, pages = 25) {
+        let content = `МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ
+${" ".repeat(40)}Федеральное государственное бюджетное образовательное учреждение
+${" ".repeat(40)}высшего образования
+${" ".repeat(40)}"НАЗВАНИЕ УНИВЕРСИТЕТА"
+${" ".repeat(80)}Кафедра ${subject}
+
+${" ".repeat(40)}Курсовая работа
+
+${" ".repeat(40)}по дисциплине: ${subject}
+${" ".repeat(40)}на тему: "${topic}"
+
+${" ".repeat(60)}Выполнил: Ф.И.О. студента
+${" ".repeat(60)}Группа: Номер группы
+${" ".repeat(60)}Проверил: Ф.И.О. преподавателя
+
+${" ".repeat(60)}${new Date().getFullYear()} г.
+
+СОДЕРЖАНИЕ
+
+Введение\t3
+Глава 1. Теоретические аспекты проблемы\t4
+    1.1. Исторический аспект\t4
+    1.2. Современные подходы\t6
+Глава 2. Практическая часть\t8
+    2.1. Методология исследования\t8
+    2.2. Результаты и их анализ\t10
+Глава 3. Практические рекомендации\t12
+Заключение\t14
+Список использованных источников\t15
+Приложения\t17
+
+ВВЕДЕНИЕ
+
+${getRandomElement(academicSources.introTexts)}
+
+Актуальность темы обусловлена тем, что в современном обществе наблюдается стремительное развитие технологий, что требует новых подходов к решению существующих проблем. В условиях цифровизации все большее значение приобретает понимание взаимосвязи между технологическим прогрессом и социальными процессами.
+
+Цель работы: провести комплексный анализ проблемы и разработать рекомендации по её решению.
+
+Задачи:
+1. Изучить теоретические аспекты проблемы
+2. Провести анализ современных подходов
+3. Разработать практические рекомендации
+
+Объект исследования: ${topic}
+Предмет исследования: особенности ${topic} в современных условиях
+
+Методы исследования: анализ научной литературы, сравнительный метод, метод экспертной оценки.
+
+Теоретическая значимость: раскрытие сущности проблемы и выявление ключевых аспектов её решения.
+
+Практическая значимость: разработка рекомендаций для применения на практике.
+
+${" ".repeat(40)}ГЛАВА 1. ТЕОРЕТИЧЕСКИЕ АСПЕКТЫ ПРОБЛЕМЫ
+
+1.1. Исторический аспект
+
+${academicSources.bodyTexts[0]}
+
+Для более глубокого понимания рассматриваемой проблемы необходимо обратиться к историческому анализу вопроса. Исторический аспект позволяет проследить эволюцию подходов к решению данной проблемы и выявить ключевые тенденции развития.
+
+${academicSources.bodyTexts[1]}
+
+1.2. Современные подходы
+
+${academicSources.bodyTexts[2]}
+
+Современные подходы к решению рассматриваемой проблемы предполагают комплексное использование различных методов и инструментов. Важно учитывать как теоретические аспекты, так и практические реализации.
+
+${getRandomElement(academicSources.bodyTexts)}
+
+${" ".repeat(40)}ГЛАВА 2. ПРАКТИЧЕСКАЯ ЧАСТЬ
+
+2.1. Методология исследования
+
+Для решения поставленных задач были использованы следующие методы: анализ научной литературы, сравнительный метод, метод экспертной оценки. 
+
+${getRandomElement(academicSources.bodyTexts)}
+
+2.2. Результаты и их анализ
+
+${getRandomElement(academicSources.bodyTexts)}
+
+Проведенный анализ позволяет сделать вывод о том, что рассмотренная проблема требует дальнейшего изучения и разработки комплексных подходов к ее решению.
+
+${getRandomElement(academicSources.bodyTexts)}
+
+${" ".repeat(40)}ГЛАВА 3. ПРАКТИЧЕСКИЕ РЕКОМЕНДАЦИИ
+
+На основе проведенного анализа были разработаны следующие рекомендации:
+
+1. ${getRandomElement(academicSources.bodyTexts)}
+2. ${getRandomElement(academicSources.bodyTexts)}
+3. ${getRandomElement(academicSources.bodyTexts)}
+
+${getRandomElement(academicSources.bodyTexts)}
+
+ЗАКЛЮЧЕНИЕ
+
+${getRandomElement(academicSources.conclusionTexts)}
+
+В ходе выполнения работы были достигнуты поставленные цели и решены задачи. Полученные результаты могут быть использованы для дальнейшего изучения рассматриваемой проблемы и разработки практических рекомендаций.
+
+${getRandomElement(academicSources.conclusionTexts)}
+
+СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ
+
+${academicSources.topics.slice(0, 8).map((source, i) => `${i+1}. ${source} // Автор. - Место: Издательство, ${2020+i}. - 200 с.`).join('\n')}
+
+ПРИЛОЖЕНИЯ
+
+`;
+
+        // Add more content to reach specified number of pages
+        for (let i = 0; i < (pages - 5); i++) {
+            content += `ПРИЛОЖЕНИЕ ${i+1}
+
+${getRandomElement(academicSources.bodyTexts)}
+
+`;
         }
         
         return content;
     }
 
-    // Function to generate essay (300+ lines)
+    // Function to generate essay (300+ lines) with proper formatting
     function generateEssay(topic, subject, requirements) {
-        let content = `# Сочинение: ${topic}\n\n`;
-        
-        content += "## Вступление\n";
-        content += getRandomElement(academicSources.introTexts) + "\n\n";
-        
-        content += "## Основная часть\n";
-        content += academicSources.bodyTexts.map(text => text).join(' ') + "\n\n";
+        let content = `МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ
+${" ".repeat(40)}Федеральное государственное бюджетное образовательное учреждение
+${" ".repeat(40)}высшего образования
+${" ".repeat(40)}"НАЗВАНИЕ УНИВЕРСИТЕТА"
+${" ".repeat(80)}Кафедра ${subject}
+
+${" ".repeat(40)}Сочинение
+
+${" ".repeat(40)}по дисциплине: ${subject}
+${" ".repeat(40)}на тему: "${topic}"
+
+${" ".repeat(60)}Выполнил: Ф.И.О. студента
+${" ".repeat(60)}Группа: Номер группы
+${" ".repeat(60)}Проверил: Ф.И.О. преподавателя
+
+${" ".repeat(60)}${new Date().getFullYear()} г.
+
+СОЧИНЕНИЕ
+
+${getRandomElement(academicSources.introTexts)}
+
+Вступление
+
+${getRandomElement(academicSources.introTexts)}
+
+Основная часть
+
+${academicSources.bodyTexts.map(text => text).join(' ')}
+
+`;
         
         // Add more content to reach 300+ lines
         for (let i = 0; i < 50; i++) {
-            content += `### Аспект ${i+1}\n`;
-            content += getRandomElement(academicSources.bodyTexts) + "\n\n";
+            content += `Аспект ${i+1}
+
+${getRandomElement(academicSources.bodyTexts)}
+
+`;
         }
         
-        content += "## Заключение\n";
-        content += getRandomElement(academicSources.conclusionTexts) + "\n\n";
+        content += `Заключение
+
+${getRandomElement(academicSources.conclusionTexts)}
+
+Подводя итоги, можно утверждать, что тема данной работы сохраняет свою актуальность и требует дальнейшего внимания со стороны исследователей. Предложенные в работе рекомендации могут быть полезны для специалистов в данной области.
+
+`;
         
         return content;
     }
 
-    // Function to generate report (2+ pages)
+    // Function to generate report (2+ pages) with proper GOST formatting
     function generateReport(topic, subject, requirements) {
-        let content = `# Доклад: ${topic}\n\n`;
-        
-        content += "## Введение\n";
-        content += getRandomElement(academicSources.introTexts) + "\n\n";
-        
-        content += "## Основная часть\n";
-        content += academicSources.bodyTexts.map(text => text).join(' ') + "\n\n";
-        
-        content += "## Заключение\n";
-        content += getRandomElement(academicSources.conclusionTexts) + "\n\n";
-        
-        content += "## Список источников\n";
-        academicSources.topics.slice(0, 5).forEach((source, i) => {
-            content += `${i+1}. ${source} // Автор. - Место: Издательство, 2023. - 150 с.\n`;
-        });
-        
+        let content = `МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ
+${" ".repeat(40)}Федеральное государственное бюджетное образовательное учреждение
+${" ".repeat(40)}высшего образования
+${" ".repeat(40)}"НАЗВАНИЕ УНИВЕРСИТЕТА"
+${" ".repeat(80)}Кафедра ${subject}
+
+${" ".repeat(40)}Доклад
+
+${" ".repeat(40)}по дисциплине: ${subject}
+${ " ".repeat(40)}на тему: "${topic}"
+
+${" ".repeat(60)}Выполнил: Ф.И.О. студента
+${" ".repeat(60)}Группа: Номер группы
+${" ".repeat(60)}Проверил: Ф.И.О. преподавателя
+
+${" ".repeat(60)}${new Date().getFullYear()} г.
+
+ДОКЛАД
+
+ВВЕДЕНИЕ
+
+${getRandomElement(academicSources.introTexts)}
+
+${academicSources.bodyTexts.map(text => text).join(' ')}
+
+ОСНОВНАЯ ЧАСТЬ
+
+${academicSources.bodyTexts.map(text => text).join(' ')}
+
+${getRandomElement(academicSources.bodyTexts)}
+
+ЗАКЛЮЧЕНИЕ
+
+${getRandomElement(academicSources.conclusionTexts)}
+
+${academicSources.topics.slice(0, 5).forEach((source, i) => {
+    content += `${i+1}. ${source} // Автор. - Место: Издательство, 2023. - 150 с.\n`;
+});
+
         return content;
+    }
+
+    // Function to create Word document content
+    function createWordDocument(content, topic) {
+        const contentWithBreaks = content.replace(/\n/g, '<br>');
+        return `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+            <meta charset="utf-8">
+            <title>${topic}</title>
+        </head>
+        <body>
+            <div>
+                ${contentWithBreaks}
+            </div>
+        </body>
+        </html>`;
     }
 
     // Form submission handler
-    orderForm.addEventListener('submit', async function(e) {
+    workForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const workType = document.getElementById('workType').value;
+        const workType = document.getElementById('type').value;
         const topic = document.getElementById('topic').value;
         const subject = document.getElementById('subject').value;
         const requirements = document.getElementById('requirements').value;
+        const pages = document.getElementById('pages').value;
         
         // Show loading state
-        resultDiv.innerHTML = '<p>Генерируем вашу работу... Пожалуйста, подождите.</p>';
-        resultDiv.classList.add('show');
+        loadingDiv.classList.remove('hidden');
+        resultDiv.classList.add('hidden');
+        errorDiv.classList.add('hidden');
         
         try {
             // Get academic data
@@ -169,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             switch(workType) {
                 case 'coursework':
-                    generatedWork = generateCoursework(topic, subject, requirements);
+                    generatedWork = generateCoursework(topic, subject, requirements, parseInt(pages) || 25);
                     break;
                 case 'essay':
                     generatedWork = generateEssay(topic, subject, requirements);
@@ -181,23 +341,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     generatedWork = 'Пожалуйста, выберите тип работы.';
             }
             
-            // Display the result
-            resultDiv.innerHTML = `
-                <h3>Ваша работа готова: ${topic}</h3>
-                <p><strong>Тип работы:</strong> ${getWorkTypeLabel(workType)}</p>
-                <div class="work-content">
-                    <pre style="white-space: pre-wrap; word-wrap: break-word; background: #f0f8ff; padding: 15px; border-radius: 5px; max-height: 400px; overflow-y: auto;">${generatedWork}</pre>
-                </div>
-                <button id="downloadBtn" style="margin-top: 15px;">Скачать работу</button>
+            // Hide loading and show result
+            loadingDiv.classList.add('hidden');
+            resultDiv.classList.remove('hidden');
+            
+            // Update result content
+            document.getElementById('workInfo').innerHTML = `
+                <strong>Тема:</strong> ${topic}<br>
+                <strong>Тип работы:</strong> ${getWorkTypeLabel(workType)}<br>
+                <strong>Предмет:</strong> ${subject}<br>
+                <strong>Страниц:</strong> ${workType === 'coursework' ? pages : (workType === 'essay' ? '300+' : '2+')}<br>
             `;
             
-            // Add download functionality
-            document.getElementById('downloadBtn').addEventListener('click', function() {
-                downloadWork(generatedWork, topic, workType);
-            });
+            // Store generated work for download
+            window.generatedWork = generatedWork;
+            window.workTopic = topic;
+            window.workType = workType;
             
         } catch (error) {
-            resultDiv.innerHTML = '<p>Произошла ошибка при генерации работы. Пожалуйста, попробуйте еще раз.</p>';
+            loadingDiv.classList.add('hidden');
+            errorDiv.classList.remove('hidden');
+            console.error('Error generating work:', error);
+        }
+    });
+    
+    // Download button handler
+    downloadBtn.addEventListener('click', function() {
+        if (window.generatedWork && window.workTopic && window.workType) {
+            downloadWork(window.generatedWork, window.workTopic, window.workType);
         }
     });
     
@@ -211,14 +382,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Function to download the work
+    // Function to download the work as Word document
     function downloadWork(content, topic, workType) {
-        const blob = new Blob([content], { type: 'text/plain' });
+        // Create Word document
+        const wordContent = createWordDocument(content, topic);
+        const blob = new Blob([wordContent], { type: 'application/msword' });
         const url = URL.createObjectURL(blob);
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${sanitizeFilename(topic)}_${workType}.txt`;
+        a.download = `${sanitizeFilename(topic)}_${workType}.doc`;
         document.body.appendChild(a);
         a.click();
         
