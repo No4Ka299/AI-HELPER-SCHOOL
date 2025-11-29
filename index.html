@@ -24,42 +24,7 @@
                         <input type="text" id="topic" name="topic" required placeholder="Введите тему работы">
                     </div>
 
-                    <div class="input-group">
-                        <label for="type">Тип работы:</label>
-                        <select id="type" name="type" required>
-                            <option value="">Выберите тип работы</option>
-                            <option value="coursework">Курсовая работа (25+ страниц)</option>
-                            <option value="essay">Сочинение (300+ строк)</option>
-                            <option value="report">Доклад (2+ страницы)</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="subject">Предмет:</label>
-                        <select id="subject" name="subject" required>
-                            <option value="">Выберите предмет</option>
-                            <option value="informatics">Информатика</option>
-                            <option value="literature">Литература</option>
-                            <option value="history">История</option>
-                            <option value="philosophy">Философия</option>
-                            <option value="economics">Экономика</option>
-                            <option value="law">Право</option>
-                            <option value="psychology">Психология</option>
-                            <option value="sociology">Социология</option>
-                            <option value="pedagogy">Педагогика</option>
-                            <option value="other">Другое</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="pages">Количество страниц (если применимо):</label>
-                        <input type="number" id="pages" name="pages" min="1" value="1">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="requirements">Дополнительные требования:</label>
-                        <textarea id="requirements" name="requirements" placeholder="Укажите дополнительные требования к работе"></textarea>
-                    </div>
+                    <p class="info-text">Наши ИИ-ассистенты проанализируют тему и автоматически создадут подходящую работу по ГОСТу: курсовую (25+ страниц), сочинение (300+ строк) или доклад (2+ страницы).</p>
 
                     <button type="submit" id="generateBtn">Создать работу</button>
                 </form>

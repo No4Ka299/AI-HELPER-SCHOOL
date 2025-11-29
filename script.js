@@ -65,6 +65,76 @@ document.addEventListener('DOMContentLoaded', function() {
         return array[Math.floor(Math.random() * array.length)];
     }
 
+    // Function to determine work type based on topic
+    function determineWorkType(topic) {
+        const lowerTopic = topic.toLowerCase();
+        
+        // Keywords that suggest a coursework (25+ pages)
+        const courseworkKeywords = [
+            'анализ', 'исследование', 'разработка', 'система', 'программа', 
+            'алгоритм', 'метод', 'модель', 'теория', 'практика', 'курсов',
+            'диплом', 'обзор', 'концепция', 'стратегия', 'механизм', 'технология',
+            'методика', 'процесс', 'структура', 'функция', 'эффективность'
+        ];
+        
+        // Keywords that suggest an essay (300+ lines)
+        const essayKeywords = [
+            'сочинение', 'эссе', 'мое мнение', 'что такое', 'как я понимаю', 
+            'в чем смысл', 'мое отношение', 'рассуждение', 'мое видение', 
+            'мысли о', 'мое впечатление', 'что значит', 'влияние', 'значение',
+            'роль', 'важность', 'проблема', 'вопрос', 'тема', 'человек',
+            'жизнь', 'общество', 'культура', 'нравственность', 'духовность'
+        ];
+        
+        // Keywords that suggest a report (2+ pages)
+        const reportKeywords = [
+            'доклад', 'сообщение', 'презентация', 'ознакомление', 'рассказ', 
+            'информация о', 'краткое изложение', 'объяснение', 'характеристика',
+            'описание', 'факты', 'данные', 'статистика', 'история', 'феномен'
+        ];
+        
+        // Count occurrences of keywords for each type
+        let courseworkCount = 0;
+        let essayCount = 0;
+        let reportCount = 0;
+        
+        for (const keyword of courseworkKeywords) {
+            if (lowerTopic.includes(keyword)) {
+                courseworkCount++;
+            }
+        }
+        
+        for (const keyword of essayKeywords) {
+            if (lowerTopic.includes(keyword)) {
+                essayCount++;
+            }
+        }
+        
+        for (const keyword of reportKeywords) {
+            if (lowerTopic.includes(keyword)) {
+                reportCount++;
+            }
+        }
+        
+        // Determine the type based on keyword counts and topic length
+        if (courseworkCount > essayCount && courseworkCount > reportCount) {
+            return 'coursework';
+        } else if (essayCount > courseworkCount && essayCount > reportCount) {
+            return 'essay';
+        } else if (reportCount > courseworkCount && reportCount > essayCount) {
+            return 'report';
+        } else {
+            // If no clear winner, decide based on topic length and complexity
+            if (lowerTopic.length > 50) {
+                return 'coursework'; // Longer topics are more likely to be research-focused
+            } else if (lowerTopic.length > 20) {
+                return 'report'; // Medium length topics are likely reports
+            } else {
+                return 'essay'; // Short topics are likely essays
+            }
+        }
+    }
+
     // Function to generate coursework (25+ pages) with proper GOST formatting
     function generateCoursework(topic, subject, requirements, pages = 25) {
         let content = `МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ
@@ -277,15 +347,14 @@ ${academicSources.bodyTexts.map(text => text).join(' ')}
 ${academicSources.bodyTexts.map(text => text).join(' ')}
 
 ${getRandomElement(academicSources.bodyTexts)}
-
 ЗАКЛЮЧЕНИЕ
 
 ${getRandomElement(academicSources.conclusionTexts)}
 
-${academicSources.topics.slice(0, 5).forEach((source, i) => {
-    content += `${i+1}. ${source} // Автор. - Место: Издательство, 2023. - 150 с.\n`;
-});
-
+content += `СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ\n\n`;
+        for (let i = 0; i < 5; i++) {
+            content += `${i+1}. ${academicSources.topics[i % academicSources.topics.length]} // Автор. - Место: Издательство, 2023. - 150 с.\n`;
+        }
         return content;
     }
 
@@ -310,11 +379,14 @@ ${academicSources.topics.slice(0, 5).forEach((source, i) => {
     workForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        const workType = document.getElementById('type').value;
         const topic = document.getElementById('topic').value;
-        const subject = document.getElementById('subject').value;
-        const requirements = document.getElementById('requirements').value;
-        const pages = document.getElementById('pages').value;
+        
+        if (!topic.trim()) {
+            loadingDiv.classList.add('hidden');
+            errorDiv.classList.remove('hidden');
+            document.getElementById('errorText').textContent = 'Пожалуйста, введите тему работы';
+            return;
+        }
         
         // Show loading state
         loadingDiv.classList.remove('hidden');
@@ -322,23 +394,29 @@ ${academicSources.topics.slice(0, 5).forEach((source, i) => {
         errorDiv.classList.add('hidden');
         
         try {
+            // Determine work type based on topic
+            const workType = determineWorkType(topic);
+            const subject = "Общий"; // Default subject since we're not asking for it anymore
+            
             // Get academic data
             const academicData = await getAcademicData({topic, subject});
             
             let generatedWork = '';
+            let pages = 25; // Default for coursework
             
             switch(workType) {
                 case 'coursework':
-                    generatedWork = generateCoursework(topic, subject, requirements, parseInt(pages) || 25);
+                    pages = 25;
+                    generatedWork = generateCoursework(topic, subject, "", pages);
                     break;
                 case 'essay':
-                    generatedWork = generateEssay(topic, subject, requirements);
+                    generatedWork = generateEssay(topic, subject, "");
                     break;
                 case 'report':
-                    generatedWork = generateReport(topic, subject, requirements);
+                    generatedWork = generateReport(topic, subject, "");
                     break;
                 default:
-                    generatedWork = 'Пожалуйста, выберите тип работы.';
+                    generatedWork = 'Не удалось определить тип работы.';
             }
             
             // Hide loading and show result
@@ -349,7 +427,6 @@ ${academicSources.topics.slice(0, 5).forEach((source, i) => {
             document.getElementById('workInfo').innerHTML = `
                 <strong>Тема:</strong> ${topic}<br>
                 <strong>Тип работы:</strong> ${getWorkTypeLabel(workType)}<br>
-                <strong>Предмет:</strong> ${subject}<br>
                 <strong>Страниц:</strong> ${workType === 'coursework' ? pages : (workType === 'essay' ? '300+' : '2+')}<br>
             `;
             
