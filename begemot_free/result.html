@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результат генерации - FreeBegemot</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .result-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .result-title {
+            font-size: 28px;
+            color: #5047e6;
+            margin-bottom: 10px;
+        }
+        
+        .result-content {
+            line-height: 1.8;
+        }
+        
+        .result-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .result-section:last-child {
+            border-bottom: none;
+        }
+        
+        .result-section-title {
+            font-size: 20px;
+            color: #5047e6;
+            margin-bottom: 15px;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .export-btn {
+            padding: 12px 24px;
+            border-radius: 32px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .export-btn_word {
+            background: #2b57d1;
+            color: white;
+        }
+        
+        .export-btn_pdf {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .export-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-wrapper">
+                <div class="header__logo">
+                    <a href="/" class="header__logo-link">
+                        <img src="images/logo.svg" alt="FreeBegemot" width="30" height="30">
+                        <span>FreeBegemot</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="result-container">
+            <div class="result-header">
+                <h1 class="result-title" id="resultTitle">Ваш проект готов!</h1>
+                <p>Тема: <span id="resultTopic">Пример темы проекта</span></p>
+            </div>
+            
+            <div class="result-content" id="resultContent">
+                <!-- Содержимое будет загружено через JavaScript -->
+                <p>Загрузка содержимого проекта...</p>
+            </div>
+            
+            <div class="export-buttons">
+                <a href="#" class="export-btn export-btn_word" id="exportWord">
+                    <img src="images/icons/doc-icon.svg" alt="Word" width="20" height="20"> Экспорт в Word
+                </a>
+                <a href="#" class="export-btn export-btn_pdf" id="exportPdf">
+                    <img src="images/icons/pdf-icon.svg" alt="PDF" width="20" height="20"> Экспорт в PDF
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Получаем данные из localStorage или используем тестовые данные
+            const resultData = JSON.parse(localStorage.getItem('generatedResult')) || {
+                title: 'Пример темы проекта',
+                sections: [
+                    {
+                        title: 'Введение',
+                        content: 'Введение\n\nТема "Пример темы проекта" является актуальной в современных условиях. В данной работе будет рассмотрена суть данной проблемы, её значение и возможные пути решения.'
+                    },
+                    {
+                        title: 'Основная часть',
+                        content: 'Основная часть\n\nДля более глубокого понимания темы "Пример темы проекта" необходимо рассмотреть следующие аспекты:\n\n1. Исторический аспект и развитие темы\n2. Современные тенденции и подходы\n3. Проблемы и перспективы развития\n4. Практические примеры и кейсы'
+                    },
+                    {
+                        title: 'Заключение',
+                        content: 'Заключение\n\nВ ходе работы были рассмотрены ключевые аспекты темы "Пример темы проекта". Были проанализированы различные точки зрения и подходы к решению проблемы. Можно сделать вывод, что тема "Пример темы проекта" имеет важное значение и требует дальнейшего изучения и развития.'
+                    },
+                    {
+                        title: 'Список литературы',
+                        content: 'Список литературы\n\n1. Автор, А.А. Название работы / А.А. Автор. – М.: Издательство, 2024. – 200 с.\n2. Автор, Б.Б. Другая работа / Б.Б. Автор. – СПб.: Издательство, 2024. – 150 с.\n3. Название ресурса [Электронный ресурс]. – Режим доступа: https://example.com (дата обращения: 30.11.2024).'
+                    }
+                ]
+            };
+            
+            // Обновляем заголовок и тему
+            document.getElementById('resultTitle').textContent = resultData.title;
+            document.getElementById('resultTopic').textContent = resultData.title;
+            
+            // Генерируем содержимое
+            const contentContainer = document.getElementById('resultContent');
+            contentContainer.innerHTML = '';
+            
+            resultData.sections.forEach(section => {
+                const sectionElement = document.createElement('div');
+                sectionElement.className = 'result-section';
+                
+                const titleElement = document.createElement('h2');
+                titleElement.className = 'result-section-title';
+                titleElement.textContent = section.title;
+                
+                const contentElement = document.createElement('div');
+                contentElement.innerHTML = section.content.replace(/\n/g, '<br>');
+                
+                sectionElement.appendChild(titleElement);
+                sectionElement.appendChild(contentElement);
+                contentContainer.appendChild(sectionElement);
+            });
+            
+            // Обработчики для кнопок экспорта
+            document.getElementById('exportWord').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Функция экспорта в Word будет реализована в следующей версии');
+            });
+            
+            document.getElementById('exportPdf').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Функция экспорта в PDF будет реализована в следующей версии');
+            });
+        });
+    </script>
+</body>
+</html>
