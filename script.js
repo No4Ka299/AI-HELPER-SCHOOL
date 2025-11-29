@@ -350,10 +350,11 @@ ${getRandomElement(academicSources.bodyTexts)}
 ЗАКЛЮЧЕНИЕ
 
 ${getRandomElement(academicSources.conclusionTexts)}
+        СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ
 
-content += `СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ\n\n`;
+
         for (let i = 0; i < 5; i++) {
-            content += `${i+1}. ${academicSources.topics[i % academicSources.topics.length]} // Автор. - Место: Издательство, 2023. - 150 с.\n`;
+            content += (i+1) + ". " + academicSources.topics[i % academicSources.topics.length] + " // Автор. - Место: Издательство, 2023. - 150 с.\n";
         }
         return content;
     }
@@ -384,7 +385,6 @@ content += `СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ\n\n`;
         if (!topic.trim()) {
             loadingDiv.classList.add('hidden');
             errorDiv.classList.remove('hidden');
-            document.getElementById('errorText').textContent = 'Пожалуйста, введите тему работы';
             return;
         }
         
